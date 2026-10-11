@@ -6,7 +6,7 @@
   "scripts": {
     "validate:exports": "node -e \"const fs=require('fs'); for (const f of ['postman/collections/QA Practice API.postman_collection.json','postman/environments/JSONPlaceholder QA.postman_environment.json']) { JSON.parse(fs.readFileSync(f,'utf8')); console.log('Valid JSON:', f); }\"",
     "test": "npm run validate:exports && newman run \"postman/collections/QA Practice API.postman_collection.json\" -e \"postman/environments/JSONPlaceholder QA.postman_environment.json\"",
-    "test:ci": "npm run validate:exports && newman run \"postman/collections/QA Practice API.postman_collection.json\" -e \"postman/environments/JSONPlaceholder QA.postman_environment.json\" --reporters cli,junit --reporter-junit-export reports/newman-junit.xml"
+    "test:ci": "npm run validate:exports && mkdir -p reports && newman run \"postman/collections/QA Practice API.postman_collection.json\" -e \"postman/environments/JSONPlaceholder QA.postman_environment.json\" --reporters cli,junit --reporter-junit-export reports/newman-junit.xml"
   },
   "devDependencies": {
     "newman": "^6.2.1"
