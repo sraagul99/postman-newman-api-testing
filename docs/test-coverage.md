@@ -7,7 +7,7 @@
 | API-003 | GET /users/999999 | Unknown user | JSONPlaceholder-specific response behavior; verify returned body and status against the live service |
 | API-004 | POST /posts | Create demo post | 201, JSON content type, generated ID, returned fields |
 | API-005 | PUT /posts/{postId} | Update demo post | 200, ID, updated title/body, userId |
-| API-006 | DELETE /posts/{postId} | Delete demo post | 200 and empty object; no persistence claim |
+| API-006 | DELETE /posts/{postId} | Delete demo post | 200 and an empty representation or empty object; no persistence claim |
 | API-007 | GET /not-a-valid-resource | Unknown route | 404 and empty JSON object |
 
 ## Coverage notes
