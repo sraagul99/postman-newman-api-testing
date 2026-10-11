@@ -44,7 +44,7 @@ postman-newman-api-testing/
 3. Run the collection: `npm test`
 4. Run with a JUnit report: `npm run test:ci`
 
-The JUnit XML report is written to `reports/newman-junit.xml` and is ignored by Git. No API key is required for the configured public demo API.
+The JUnit XML report is written to `reports/newman-junit.xml` and is ignored by Git. No API key is required for the configured public demo API. Because the service is a shared demo endpoint, a live run can be affected by temporary network/service behavior; investigate unexpected responses before changing assertions.
 
 ## Run in Postman
 
