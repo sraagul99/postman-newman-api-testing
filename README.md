@@ -1,26 +1,49 @@
 # Postman + Newman API Testing
 
-A portfolio-ready API testing project demonstrating request authoring, reusable environment configuration, JavaScript assertions, test-data handling, command-line execution with Newman, and CI automation with GitHub Actions.
+![CI](https://github.com/sraagul99/postman-newman-api-testing/actions/workflows/api-tests.yml/badge.svg?branch=main)
+![Postman](https://img.shields.io/badge/Postman-API%20Testing-FF6C37?logo=postman&logoColor=white)
+![Newman](https://img.shields.io/badge/Newman-CLI%20Automation-6C47FF)
+![Node.js](https://img.shields.io/badge/Node.js-22-339933?logo=nodedotjs&logoColor=white)
 
-> **API under test:** [JSONPlaceholder](https://jsonplaceholder.typicode.com), a public demo REST API. It is intended for learning and testing—not production use. JSONPlaceholder simulates writes, so POST, PUT, and DELETE responses do not persist server-side changes.
+A QA engineering portfolio project demonstrating functional REST API testing with **Postman**, **JavaScript assertions**, **environment variables**, **Newman**, and **GitHub Actions**.
 
-## Project goals
+**Application under test:** [JSONPlaceholder](https://jsonplaceholder.typicode.com/) — a public demo REST API for practice.
 
-- Validate REST API contracts through status codes, headers, response schemas/fields, and business-relevant assertions.
-- Demonstrate positive and negative test scenarios.
-- Extract response data into collection variables and reuse it across requests.
-- Keep configuration outside request definitions using a Postman environment.
-- Run the collection locally with Newman and automatically on pushes and pull requests.
-- Avoid committing API keys, personal tokens, or generated reports.
+> **Execution integrity:** GitHub Actions results and Newman reports are the source of truth for executed tests. JSONPlaceholder simulates writes; a successful POST, PUT, or DELETE response does not prove server-side persistence.
+
+## Project at a glance
+
+| Item | Details |
+|---|---|
+| Test approach | Positive, negative, contract, data-type, header, and response-time checks |
+| Toolchain | Postman, Newman, Node.js, GitHub Actions |
+| API under test | JSONPlaceholder |
+| Coverage | User retrieval, post CRUD-style responses, unknown-resource handling |
+| Reports | CLI output and JUnit XML for CI |
+| Credentials | No API key required for this public demo endpoint |
+
+## Quality coverage
+
+| ID | Request / workflow | Key checks |
+|---|---|---|
+| API-001 | List users | Status, JSON content type, response time, non-empty collection and required field types |
+| API-002 | Get user by ID | Status, requested ID, name, email, address and company structure |
+| API-003 | Request a missing user | Documented JSONPlaceholder missing-resource behavior |
+| API-004 | Create a post | Status, content type, generated ID, and returned fields |
+| API-005 | Update a post | Status, requested ID, revised fields and user ID |
+| API-006 | Delete a post | Status and the demo API's empty/empty-object response representation |
+| API-007 | Request an unknown route | Not-found status and response contract |
+
+See [Test Coverage](docs/test-coverage.md) for the detailed matrix and [Test Strategy](docs/test-strategy.md) for the entry/exit criteria and known risks.
 
 ## Repository structure
 
 ```text
-postman-newman-api-testing/
+.
 ├── .github/workflows/api-tests.yml
 ├── docs/
-│   ├── test-strategy.md
-│   └── test-coverage.md
+│   ├── test-coverage.md
+│   └── test-strategy.md
 ├── postman/
 │   ├── collections/QA Practice API.postman_collection.json
 │   └── environments/JSONPlaceholder QA.postman_environment.json
@@ -28,62 +51,73 @@ postman-newman-api-testing/
 ├── reports/.gitkeep
 ├── .gitignore
 ├── package.json
-└── package-lock.json
+└── README.md
 ```
 
-## Prerequisites
+The CSV file is prepared for a future data-driven extension; the current collection does not consume it yet.
 
-- Node.js 20 or later
+## Getting started
+
+### Prerequisites
+
+- Node.js 22 (or a compatible supported LTS release)
 - npm
-- Optional: Postman Desktop to inspect and run the collection interactively
+- Network access to JSONPlaceholder
 
-## Run locally
+### Install dependencies
 
-1. Clone the repository.
-2. Install dependencies: `npm install`
-3. Run the collection: `npm test`
-4. Run with a JUnit report: `npm run test:ci`
+```bash
+git clone https://github.com/sraagul99/postman-newman-api-testing.git
+cd postman-newman-api-testing
+npm install
+```
 
-The JUnit XML report is written to `reports/newman-junit.xml` and is ignored by Git. No API key is required for the configured public demo API. Because the service is a shared demo endpoint, a live run can be affected by temporary network/service behavior; investigate unexpected responses before changing assertions.
+### Run in Newman
 
-## Run in Postman
+```bash
+# Validate exported Postman JSON, then execute the collection
+npm test
+
+# Run the CI command and produce a JUnit XML report
+npm run test:ci
+
+# Validate only the Postman exports
+npm run validate:exports
+```
+
+The JUnit report is written to `reports/newman-junit.xml` and is excluded from Git.
+
+### Run in Postman
 
 1. Import `postman/collections/QA Practice API.postman_collection.json`.
 2. Import `postman/environments/JSONPlaceholder QA.postman_environment.json`.
 3. Select **JSONPlaceholder QA** as the active environment.
-4. Run the collection. Requests are grouped into user retrieval, post creation/update/deletion, and negative validation scenarios.
+4. Run the collection and inspect request-level assertions.
 
-## Test coverage
+## Reports and continuous integration
 
-| Area | Examples |
-|---|---|
-| Retrieval | List users, fetch a specific user, fetch a missing user |
-| Creation | Create a post and validate the response contract |
-| Update | Update a post and verify changed fields in the response |
-| Deletion | Delete a post and validate the demo API response |
-| Negative testing | Unknown resource and missing-resource behavior |
-| Assertions | Status codes, response time, JSON content type, required fields, data types, and values |
-| Data handling | Environment variables and dynamically captured IDs |
-| Execution | Postman Runner, Newman CLI, GitHub Actions |
+GitHub Actions runs the collection on pushes and pull requests targeting `main`, and supports manual dispatch from the **Actions** tab. The workflow validates the JSON exports, installs Newman, executes the collection, and uploads the JUnit report even when assertions fail.
 
-See [Test Coverage](docs/test-coverage.md) for the request-level matrix and [Test Strategy](docs/test-strategy.md) for scope and approach.
+A green CI run confirms only that the configured collection assertions completed against the external service at that time. Review the request-level failure and JUnit report before attributing a failure to the API or weakening an assertion.
 
-## CI/CD
+## QA documentation
 
-GitHub Actions runs on every push and pull request targeting `main`, and can also be run manually from the **Actions** tab. The workflow installs locked dependencies, executes Newman, uploads a JUnit report even when tests fail, and marks the run failed when assertions fail.
+- [Test coverage matrix](docs/test-coverage.md)
+- [Test strategy](docs/test-strategy.md)
 
-## Quality and security practices
+## Scope and limitations
 
-- Environment-specific values are stored in Postman environment files rather than hard-coded in requests.
-- No API key or secret is required for this public demo API.
-- Generated reports and local environment overrides are excluded by `.gitignore`.
-- CI uses `npm ci` for reproducible dependency installation.
-- Negative cases are included alongside happy paths.
-- Demo API limitations are documented so simulated write behavior is not misrepresented as persistence.
+JSONPlaceholder is a mock/demo API. This project does not claim authenticated API coverage, persistence verification, security certification, schema governance, or load/performance testing. The API-003 and API-007 expectations are service-specific. Response-time assertions can be affected by network latency and shared-service behaviour.
 
-## Known limitations
+For a production-oriented extension, reuse the collection structure against an API that supports authenticated CRUD operations and add authorization, pagination, schema compatibility, and persisted-state checks.
 
-JSONPlaceholder is a mock/demo service. A successful write response proves that the request and response contract were handled as expected by the demo, but does not prove persisted data changed. For a production-style extension, point the collection at an API that supports authenticated CRUD operations and add contract checks for authorization, pagination, schema compatibility, rate limits, and state persistence.
+## Quality principles
+
+1. Assert response contracts and business-relevant fields, not only status codes.
+2. Keep environment-specific values in a Postman environment.
+3. Preserve negative scenarios and investigate unexpected service behavior.
+4. Report response limitations accurately.
+5. Use CI results and generated reports as execution evidence.
 
 ## Author
 
@@ -91,3 +125,5 @@ JSONPlaceholder is a mock/demo service. A successful write response proves that 
 
 - LinkedIn: [https://www.linkedin.com/in/sraagul](https://www.linkedin.com/in/sraagul)
 - GitHub: [https://github.com/sraagul99](https://github.com/sraagul99)
+
+*Independent learning project. JSONPlaceholder is an external demo service; this repository is not affiliated with its maintainers.*
