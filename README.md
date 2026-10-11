@@ -87,6 +87,7 @@ JSONPlaceholder is a mock/demo service. A successful write response proves that 
 
 ## Author
 
-**Raagul — QA Engineer**
+**Raagul Sivanathan** · Quality Assurance Engineer
 
-This repository showcases API testing practices with Postman, Newman, JavaScript assertions, test documentation, and CI automation.
+- LinkedIn: [https://www.linkedin.com/in/sraagul](https://www.linkedin.com/in/sraagul)
+- GitHub: [https://github.com/sraagul99](https://github.com/sraagul99)
