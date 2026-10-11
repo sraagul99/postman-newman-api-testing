@@ -82,7 +82,7 @@
               }
             ],
             "url": "{{baseUrl}}/users/999999",
-            "description": "JSONPlaceholder returns an empty object for this missing-resource scenario."
+            "description": "JSONPlaceholder returns an empty object with status 200 for this missing-resource scenario."
           },
           "event": [
             {
@@ -90,8 +90,8 @@
               "script": {
                 "type": "text/javascript",
                 "exec": [
-                  "pm.test('Status is 404 Not Found', function () { pm.response.to.have.status(404); });",
-                  "pm.test('Missing-resource response is JSON', function () { pm.expect(pm.response.headers.get('Content-Type') || '').to.include('application/json'); });"
+                  "pm.test('Status is 200 for JSONPlaceholder mock behavior', function () { pm.response.to.have.status(200); });",
+                  "pm.test('Body is an empty object', function () { pm.expect(pm.response.json()).to.eql({}); });"
                 ]
               }
             }
@@ -208,7 +208,7 @@
                 "type": "text/javascript",
                 "exec": [
                   "pm.test('Status is 200 OK', function () { pm.response.to.have.status(200); });",
-                  "pm.test('Response body is empty JSON object when returned as JSON', function () { const text = pm.response.text(); pm.expect(text === '' || pm.response.json()).to.be.ok; });"
+                  "pm.test('Response body is an empty object', function () { pm.expect(pm.response.json()).to.eql({}); });"
                 ]
               }
             }
@@ -225,7 +225,7 @@
               }
             ],
             "url": "{{baseUrl}}/not-a-valid-resource",
-            "description": "Negative scenario for an unknown resource route."
+            "description": "JSONPlaceholder returns an empty object with status 404 for an unknown resource route."
           },
           "event": [
             {
@@ -233,7 +233,8 @@
               "script": {
                 "type": "text/javascript",
                 "exec": [
-                  "pm.test('Unknown route returns 404', function () { pm.response.to.have.status(404); });"
+                  "pm.test('Unknown route returns 404', function () { pm.response.to.have.status(404); });",
+                  "pm.test('Response body is an empty object', function () { pm.expect(pm.response.json()).to.eql({}); });"
                 ]
               }
             }
