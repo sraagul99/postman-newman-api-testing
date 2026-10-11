@@ -1,0 +1,17 @@
+{
+  "name": "postman-newman-api-testing",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Portfolio API testing project using Postman, Newman, and GitHub Actions",
+  "scripts": {
+    "validate:exports": "node -e \"const fs=require('fs'); for (const f of ['postman/collections/QA Practice API.postman_collection.json','postman/environments/JSONPlaceholder QA.postman_environment.json']) { JSON.parse(fs.readFileSync(f,'utf8')); console.log('Valid JSON:', f); }\"",
+    "test": "npm run validate:exports && newman run \"postman/collections/QA Practice API.postman_collection.json\" -e \"postman/environments/JSONPlaceholder QA.postman_environment.json\"",
+    "test:ci": "npm run validate:exports && newman run \"postman/collections/QA Practice API.postman_collection.json\" -e \"postman/environments/JSONPlaceholder QA.postman_environment.json\" --reporters cli,junit --reporter-junit-export reports/newman-junit.xml"
+  },
+  "devDependencies": {
+    "newman": "^6.2.1"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
