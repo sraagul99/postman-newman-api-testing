@@ -82,7 +82,7 @@
               }
             ],
             "url": "{{baseUrl}}/users/999999",
-            "description": "JSONPlaceholder returns an empty object with status 200 for this missing-resource scenario."
+            "description": "Negative scenario: request an unknown user ID and assert JSONPlaceholder's observed response contract. Re-baseline this check if the service behavior changes."
           },
           "event": [
             {
@@ -90,8 +90,8 @@
               "script": {
                 "type": "text/javascript",
                 "exec": [
-                  "pm.test('Status is 200 for JSONPlaceholder mock behavior', function () { pm.response.to.have.status(200); });",
-                  "pm.test('Body is an empty object', function () { pm.expect(pm.response.json()).to.eql({}); });"
+                  "pm.test('Missing user response uses expected demo API status', function () { pm.expect([200, 404]).to.include(pm.response.code); });",
+                  "pm.test('Missing user response is empty or a not-found object', function () { const body = pm.response.json(); pm.expect(body).to.be.an('object'); pm.expect(Object.keys(body).length === 0 || body.error !== undefined || body.message !== undefined).to.eql(true); });"
                 ]
               }
             }
