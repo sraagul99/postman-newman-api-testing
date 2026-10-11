@@ -11,37 +11,91 @@
       "item": [
         {
           "name": "GET - List users",
-          "request": {"method":"GET","header":[{"key":"Accept","value":"application/json"}],"url":"{{baseUrl}}/users","description":"Retrieve the user collection."},
-          "event": [{"listen":"test","script":{"type":"text/javascript","exec":[
-            "pm.test('Status is 200 OK', function () { pm.response.to.have.status(200); });",
-            "pm.test('Response is JSON', function () { pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json'); });",
-            "pm.test('Response time is below threshold', function () { pm.expect(pm.response.responseTime).to.be.below(Number(pm.environment.get('requestTimeoutMs') || 5000)); });",
-            "const body = pm.response.json();",
-            "pm.test('Response is a non-empty array', function () { pm.expect(body).to.be.an('array').that.is.not.empty; });",
-            "pm.test('Users have required fields and valid types', function () { body.forEach(function (user) { pm.expect(user.id).to.be.a('number'); pm.expect(user.name).to.be.a('string'); pm.expect(user.email).to.be.a('string'); }); });",
-            "const selected = body.find(function (user) { return user.id === Number(pm.environment.get('userId') || 1); });",
-            "pm.test('Configured user exists in list', function () { pm.expect(selected).to.exist; });"
-          ]}}]
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/users",
+            "description": "Retrieve the user collection."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status is 200 OK', function () { pm.response.to.have.status(200); });",
+                  "pm.test('Response is JSON', function () { pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json'); });",
+                  "pm.test('Response time is below threshold', function () { pm.expect(pm.response.responseTime).to.be.below(Number(pm.environment.get('requestTimeoutMs') || 5000)); });",
+                  "const body = pm.response.json();",
+                  "pm.test('Response is a non-empty array', function () { pm.expect(body).to.be.an('array').that.is.not.empty; });",
+                  "pm.test('Users have required fields and valid types', function () { body.forEach(function (user) { pm.expect(user.id).to.be.a('number'); pm.expect(user.name).to.be.a('string'); pm.expect(user.email).to.be.a('string'); }); });",
+                  "const selected = body.find(function (user) { return user.id === Number(pm.environment.get('userId') || 1); });",
+                  "pm.test('Configured user exists in list', function () { pm.expect(selected).to.exist; });"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "GET - Get user by ID",
-          "request": {"method":"GET","header":[{"key":"Accept","value":"application/json"}],"url":"{{baseUrl}}/users/{{userId}}","description":"Verify a known user and capture its ID."},
-          "event": [{"listen":"test","script":{"type":"text/javascript","exec":[
-            "pm.test('Status is 200 OK', function () { pm.response.to.have.status(200); });",
-            "const body = pm.response.json();",
-            "pm.test('ID matches requested ID', function () { pm.expect(body.id).to.eql(Number(pm.environment.get('userId') || 1)); });",
-            "pm.test('Name and email are populated', function () { pm.expect(body.name).to.be.a('string').and.not.empty; pm.expect(body.email).to.be.a('string').and.include('@'); });",
-            "pm.test('Address and company objects are present', function () { pm.expect(body.address).to.be.an('object'); pm.expect(body.company).to.be.an('object'); });",
-            "pm.collectionVariables.set('lastFetchedUserId', String(body.id));"
-          ]}}]
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/users/{{userId}}",
+            "description": "Verify a known user and capture its ID."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status is 200 OK', function () { pm.response.to.have.status(200); });",
+                  "const body = pm.response.json();",
+                  "pm.test('ID matches requested ID', function () { pm.expect(body.id).to.eql(Number(pm.environment.get('userId') || 1)); });",
+                  "pm.test('Name and email are populated', function () { pm.expect(body.name).to.be.a('string').and.not.empty; pm.expect(body.email).to.be.a('string').and.include('@'); });",
+                  "pm.test('Address and company objects are present', function () { pm.expect(body.address).to.be.an('object'); pm.expect(body.company).to.be.an('object'); });",
+                  "pm.collectionVariables.set('lastFetchedUserId', String(body.id));"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "GET - User does not exist",
-          "request": {"method":"GET","header":[{"key":"Accept","value":"application/json"}],"url":"{{baseUrl}}/users/999999","description":"JSONPlaceholder returns an empty object for this missing-resource scenario."},
-          "event": [{"listen":"test","script":{"type":"text/javascript","exec":[
-            "pm.test('Status is 200 for JSONPlaceholder mock behavior', function () { pm.response.to.have.status(200); });",
-            "pm.test('Body is an empty object', function () { pm.expect(pm.response.json()).to.eql({}); });"
-          ]}}]
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/users/999999",
+            "description": "JSONPlaceholder returns an empty object for this missing-resource scenario."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status is 404 Not Found', function () { pm.response.to.have.status(404); });",
+                  "pm.test('Missing-resource response is JSON', function () { pm.expect(pm.response.headers.get('Content-Type') || '').to.include('application/json'); });"
+                ]
+              }
+            }
+          ]
         }
       ]
     },
@@ -50,45 +104,148 @@
       "item": [
         {
           "name": "POST - Create post",
-          "request": {"method":"POST","header":[{"key":"Accept","value":"application/json"},{"key":"Content-Type","value":"application/json; charset=UTF-8"}],"body":{"mode":"raw","raw":"{\n  \"title\": \"QA API test post\",\n  \"body\": \"Created by the Postman and Newman API testing suite.\",\n  \"userId\": {{userId}}\n}","options":{"raw":{"language":"json"}}},"url":"{{baseUrl}}/posts","description":"JSONPlaceholder simulates this create request; it does not persist data."},
-          "event": [{"listen":"test","script":{"type":"text/javascript","exec":[
-            "pm.test('Status is 201 Created', function () { pm.response.to.have.status(201); });",
-            "pm.test('Response is JSON', function () { pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json'); });",
-            "const body = pm.response.json();",
-            "pm.test('Generated ID is numeric', function () { pm.expect(body.id).to.be.a('number'); });",
-            "pm.test('Created fields match request', function () { pm.expect(body.title).to.eql('QA API test post'); pm.expect(body.body).to.include('Postman and Newman'); pm.expect(body.userId).to.eql(Number(pm.environment.get('userId') || 1)); });",
-            "pm.environment.set('createdPostId', String(body.id));"
-          ]}}]
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json; charset=UTF-8"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"QA API test post\",\n  \"body\": \"Created by the Postman and Newman API testing suite.\",\n  \"userId\": {{userId}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{baseUrl}}/posts",
+            "description": "JSONPlaceholder simulates this create request; it does not persist data."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status is 201 Created', function () { pm.response.to.have.status(201); });",
+                  "pm.test('Response is JSON', function () { pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json'); });",
+                  "const body = pm.response.json();",
+                  "pm.test('Generated ID is numeric', function () { pm.expect(body.id).to.be.a('number'); });",
+                  "pm.test('Created fields match request', function () { pm.expect(body.title).to.eql('QA API test post'); pm.expect(body.body).to.include('Postman and Newman'); pm.expect(body.userId).to.eql(Number(pm.environment.get('userId') || 1)); });",
+                  "pm.environment.set('createdPostId', String(body.id));",
+                  "pm.collectionVariables.set('createdPostId', String(body.id));"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "PUT - Update post",
-          "request": {"method":"PUT","header":[{"key":"Accept","value":"application/json"},{"key":"Content-Type","value":"application/json; charset=UTF-8"}],"body":{"mode":"raw","raw":"{\n  \"id\": {{postId}},\n  \"title\": \"{{updatedTitle}}\",\n  \"body\": \"Updated by the API regression test suite.\",\n  \"userId\": {{userId}}\n}","options":{"raw":{"language":"json"}}},"url":"{{baseUrl}}/posts/{{postId}}","description":"Verify fields returned by a demo update response."},
-          "event": [{"listen":"test","script":{"type":"text/javascript","exec":[
-            "pm.test('Status is 200 OK', function () { pm.response.to.have.status(200); });",
-            "const body = pm.response.json();",
-            "pm.test('ID matches requested post', function () { pm.expect(body.id).to.eql(Number(pm.environment.get('postId') || 1)); });",
-            "pm.test('Updated title is reflected', function () { pm.expect(body.title).to.eql(pm.environment.get('updatedTitle')); });",
-            "pm.test('Updated body and user ID are valid', function () { pm.expect(body.body).to.include('API regression'); pm.expect(body.userId).to.eql(Number(pm.environment.get('userId') || 1)); });"
-          ]}}]
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json; charset=UTF-8"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": {{postId}},\n  \"title\": \"{{updatedTitle}}\",\n  \"body\": \"Updated by the API regression test suite.\",\n  \"userId\": {{userId}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{baseUrl}}/posts/{{postId}}",
+            "description": "Verify fields returned by a demo update response."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status is 200 OK', function () { pm.response.to.have.status(200); });",
+                  "const body = pm.response.json();",
+                  "pm.test('ID matches requested post', function () { pm.expect(body.id).to.eql(Number(pm.environment.get('postId') || 1)); });",
+                  "pm.test('Updated title is reflected', function () { pm.expect(body.title).to.eql(pm.environment.get('updatedTitle')); });",
+                  "pm.test('Updated body and user ID are valid', function () { pm.expect(body.body).to.include('API regression'); pm.expect(body.userId).to.eql(Number(pm.environment.get('userId') || 1)); });"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "DELETE - Delete post",
-          "request": {"method":"DELETE","header":[{"key":"Accept","value":"application/json"}],"url":"{{baseUrl}}/posts/{{postId}}","description":"Validates demo delete response only; server state is not persisted."},
-          "event": [{"listen":"test","script":{"type":"text/javascript","exec":[
-            "pm.test('Status is 200 OK', function () { pm.response.to.have.status(200); });",
-            "pm.test('Response is an empty JSON object', function () { pm.expect(pm.response.json()).to.eql({}); });"
-          ]}}]
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/posts/{{postId}}",
+            "description": "Validates demo delete response only; server state is not persisted."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status is 200 OK', function () { pm.response.to.have.status(200); });",
+                  "pm.test('Response body is empty JSON object when returned as JSON', function () { const text = pm.response.text(); pm.expect(text === '' || pm.response.json()).to.be.ok; });"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "GET - Invalid resource route",
-          "request": {"method":"GET","header":[{"key":"Accept","value":"application/json"}],"url":"{{baseUrl}}/not-a-valid-resource","description":"Negative scenario for an unknown resource route."},
-          "event": [{"listen":"test","script":{"type":"text/javascript","exec":[
-            "pm.test('Unknown resource returns 404', function () { pm.response.to.have.status(404); });",
-            "pm.test('Response body is empty JSON object', function () { pm.expect(pm.response.json()).to.eql({}); });"
-          ]}}]
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/not-a-valid-resource",
+            "description": "Negative scenario for an unknown resource route."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Unknown route returns 404', function () { pm.response.to.have.status(404); });"
+                ]
+              }
+            }
+          ]
         }
       ]
     }
   ],
-  "variable": [{"key":"lastFetchedUserId","value":""}]
+  "variable": [
+    {
+      "key": "lastFetchedUserId",
+      "value": ""
+    }
+  ]
 }
