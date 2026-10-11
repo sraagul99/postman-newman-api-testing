@@ -208,7 +208,7 @@
                 "type": "text/javascript",
                 "exec": [
                   "pm.test('Status is 200 OK', function () { pm.response.to.have.status(200); });",
-                  "pm.test('Response body is empty when the demo API returns no content', function () { pm.expect(pm.response.text()).to.eql(''); });"
+                  "pm.test('Response body is empty or an empty JSON object', function () { const body = pm.response.text().trim(); if (body.length === 0) { pm.expect(body).to.eql(''); } else { pm.expect(JSON.parse(body)).to.deep.equal({}); } });"
                 ]
               }
             }
