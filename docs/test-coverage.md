@@ -4,7 +4,7 @@
 |---|---|---|---|
 | API-001 | GET /users | Retrieve users | 200, JSON content type, response time, non-empty array, required fields and types |
 | API-002 | GET /users/{userId} | Retrieve known user | 200, requested ID, name/email, address and company objects |
-| API-003 | GET /users/999999 | Unknown user | JSONPlaceholder-specific 200 response with empty object |
+| API-003 | GET /users/999999 | Unknown user | JSONPlaceholder-specific response behavior; verify returned body and status against the live service |
 | API-004 | POST /posts | Create demo post | 201, JSON content type, generated ID, returned fields |
 | API-005 | PUT /posts/{postId} | Update demo post | 200, ID, updated title/body, userId |
 | API-006 | DELETE /posts/{postId} | Delete demo post | 200 and empty object; no persistence claim |
