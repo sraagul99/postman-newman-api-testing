@@ -40,7 +40,7 @@ postman-newman-api-testing/
 ## Run locally
 
 1. Clone the repository.
-2. Install dependencies: `npm ci`
+2. Install dependencies: `npm install`
 3. Run the collection: `npm test`
 4. Run with a JUnit report: `npm run test:ci`
 
